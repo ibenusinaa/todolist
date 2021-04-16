@@ -1,0 +1,7 @@
+.jumbotron-landing-page{
+    background-image: url('./../undraw_To_do_re_jaef.svg');
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: -65px 50px;
+}
