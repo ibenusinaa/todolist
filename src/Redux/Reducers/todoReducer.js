@@ -11,7 +11,11 @@ const todoReducer = (state = initialState, action) => {
         case 'TODO_SUCCESS':
             return {...state, data: action.payload, loading: false}
         case 'TODO_ERROR':
-            return { ...state, message: action.payload, loading: false }
+            return {...state, message: action.payload, loading: false }
+        case 'UPDATE_SUCCESS':
+            return {...state, message: action.payload, loading: false}
+        case 'UPDATE_FAILED':
+            return {...state, message: action.payload, loading: false}
         default:
             return state
     }

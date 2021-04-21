@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const LandingPage = () => {
     return(
@@ -16,9 +17,11 @@ const LandingPage = () => {
                         </h1>
                     </div>
                     <div className='d-flex justify-content-end align-items-end mt-2'>
-                        <button className='btn btn-info mr-3' style={{fontSize: 20}}>
-                            Get Started
-                        </button>
+                        <Link to ='/todolist'>
+                            <button className='btn btn-info mr-3' style={{fontSize: 20}}>
+                                Get Started
+                            </button>
+                        </Link>
                         <button className='btn btn-outline-dark' style={{fontSize: 20}}>
                             Download
                         </button>

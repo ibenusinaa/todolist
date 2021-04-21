@@ -15,9 +15,7 @@ const TodoModal = ({user, onCreateTodo, todo}) => {
     const date = useRef(null)
 
     const onSubmit = () => {
-        console.log(title.current.value)
-        console.log(description.current.value)
-        console.log(date.current.value)
+
         let token = localStorage.getItem('my-tkn')
         let dataToSend = {
             title: title.current.value,
@@ -34,7 +32,9 @@ const TodoModal = ({user, onCreateTodo, todo}) => {
         <>
             <div>
                 <button className='btn' onClick={() => setModalOpen(true)} disabled={user.is_email_confirmed === 0? true : false}>
-                    +
+                    <span style={{fontSize: 24}}>
+                        +
+                    </span>
                 </button>
             </div>
             <Modal toggle={() => setModalOpen(false)} isOpen={modalOpen}>
@@ -57,7 +57,7 @@ const TodoModal = ({user, onCreateTodo, todo}) => {
                             <input type="datetime-local" ref={date} placeholder="Enter Date" className="form-control" />
                         </div>
                         <div>
-                            <input type="button" onClick={onSubmit} value="Submit" className="btn btn-primary w-100" />
+                            <input type="button" onClick={onSubmit} value="Submit" className="btn btn-info w-100" />
                         </div>
                         <div>
                             <h6 className="text-danger">
