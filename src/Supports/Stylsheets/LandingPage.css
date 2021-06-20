@@ -1,7 +1,35 @@
+@keyframes background-in {
+    0% {
+        opacity: 0;
+        transform: translateY(-3%);
+    }
+
+    100% {
+        opacity: 100;
+        transform: translateY(0%);
+    }
+}
+
+.button-get-started {
+    background-color: #695cff;
+    color: white;
+    margin-right: 1rem;
+    font-size: 1.25rem;
+    transition: all .5s;
+}
+
+.button-get-started:hover {
+    background-color: #5b4fe0;
+    color: white
+}
+
 .jumbotron-landing-page{
     background-image: url('./../undraw_To_do_re_jaef.svg');
     height: 100vh;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: -65px 50px;
+    animation-name: background-in;
+    animation-duration: 1s;
+    animation-timing-function: linear;
 }

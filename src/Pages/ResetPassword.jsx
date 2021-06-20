@@ -29,7 +29,7 @@ const ResetPassword = () => {
             setError('Panjang password minimal 6 karakter')
         }else{
             let dataToSend = {
-                email: params.email,
+                email: params.emailJWT,
                 password: password
             }
             axios.patch('http://localhost:4000/authentication-system/reset-password', dataToSend)
@@ -47,10 +47,10 @@ const ResetPassword = () => {
     return(
         <>
             <div className="container">
-                <div className="d-flex justify-content-center">
-                    <div className="card mt-5 shadow-sm" style={{width: 620}}>
+                <div className="d-flex justify-content-center p-5">
+                    <div className="card shadow-sm" style={{width: 620}}>
                         <div className="card-body row mb-3" style={{marginTop: 30}}>
-                            <h5 className="card-title col-12">Set New Password</h5>
+                            <h5 className="card-title col-12 mt-n3">Set New Password</h5>
                             
                                 {
                                     error === false && message?
@@ -67,7 +67,7 @@ const ResetPassword = () => {
                                         <>
                                             <div className='col-7'>
                                                 <h6 className="card-subtitle mb-2 text-muted mt-3">New Password</h6>
-                                                <input type={showPass? 'password': 'text'} ref={inputPassword} className='form form-control' />
+                                                <input type={showPass? 'password': 'text'} ref={inputPassword} className='form form-control' onKeyPress={(e) => {if(e.key === 'Enter') onSubmitPassword()}} />
                                                 <div className='d-flex justify-content-end mb-n4'>
                                                     <button 
                                                         className='btn shadow-none mt-n3' 
@@ -77,7 +77,7 @@ const ResetPassword = () => {
                                                     </button>
                                                 </div>
                                                 <h6 className="card-subtitle mb-2 text-muted mt-3">Confirm New Password</h6>
-                                                <input type={showConfirm? 'password' : 'text'} ref={confirmPassword} className='form form-control' />
+                                                <input type={showConfirm? 'password' : 'text'} ref={confirmPassword} className='form form-control' onKeyPress={(e) => {if(e.key === 'Enter') onSubmitPassword()}} />
                                                 <div className='d-flex justify-content-end mb-n4'>
                                                     <button 
                                                         className='btn shadow-none mt-n3' 

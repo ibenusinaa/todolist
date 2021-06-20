@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect} from 'react'
 import { connect } from 'react-redux'
 import {checkUserVerified} from './../Redux/Actions/userAction'
 import { onGetTodo, onUpdateStatus, onDeleteTask } from './../Redux/Actions/todoAction'
 import TodoModal from './../Components/TodoModal'
 import swal from 'sweetalert'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheckCircle, faCircleNotch, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { faCheckCircle, faChevronDown, faCircleNotch, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 
 
 const ToDoList = ({checkUserVerified, onGetTodo, onUpdateStatus, onDeleteTask, user, todo}) => {
@@ -37,8 +37,21 @@ const ToDoList = ({checkUserVerified, onGetTodo, onUpdateStatus, onDeleteTask, u
             token: token,
             idTodolist: id
         }
-        
-        onUpdateStatus(data)
+        swal({
+            title: "Have you finished your task?",
+            text: "If you say so, i'm gonna checklist the task!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: false,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+                onUpdateStatus(data)
+                swal("Poof! Task has been checked!", {
+                    icon: "success",
+                });
+            }
+          });
     }
 
     const onDelete = (id) => {
@@ -47,7 +60,6 @@ const ToDoList = ({checkUserVerified, onGetTodo, onUpdateStatus, onDeleteTask, u
             token: token,
             idTodolist: id
         }
-
 
         swal({
             title: "Are you sure?",
@@ -65,23 +77,40 @@ const ToDoList = ({checkUserVerified, onGetTodo, onUpdateStatus, onDeleteTask, u
             }
           });
     }
-
-    if(todo.data === null){
+    
+    if(user.email === null){
         return(
-            <div>
-                loading....
+            <div className = 'container'>
+                <div className ='d-flex justify-content-center align-items-center' style={{height: '50vh'}}>
+                    <div>
+                        Login dulu
+                    </div>
+                </div>
             </div>
         )
     }
 
+    if(todo.data === null){
+        return(
+            <div className = 'container'>
+                <div className ='d-flex justify-content-center align-items-center' style={{height: '50vh'}}>
+                    <div class="spinner-border" role="status" style={{color: '#695cff'}}>
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+
     return(
-        <div className="container">
-            <div className="row justify-content-center">
-                <div className='col-8 border border-black rounded shadow-sm mt-5'>
+        <div className="container" style={{minHeight: '70vh'}}>
+            <div className="row justify-content-center p-5">
+                <div className='col-8 border border-black rounded shadow-sm'>
                 {
                             user.is_email_confirmed === 0?
                                 <div class="alert alert-danger mt-3" role="alert">
-                                    Activate Your Account!
+                                    Please activate your account to use our To-Do-List app
                                 </div>
                             :
                                 null
@@ -97,62 +126,74 @@ const ToDoList = ({checkUserVerified, onGetTodo, onUpdateStatus, onDeleteTask, u
                     <hr/>
                     <div className='mx-3'>
                         {
-                            todo.data.map((value, index) => {
-                                return(
-                                    <>
-                                        <div key={index} className='mb-2 mt-4'>
-                                            <h5>
-                                                {
-                                                    value.date === (new Date().toDateString())?
-                                                        'Today'
-                                                    :
-                                                        (value.date).split(' ')[1] === (new Date().toDateString().split(' ')[1]) && Number((value.date).split(' ')[2]) - (Number(new Date().toDateString().split(' ')[2])) === 1?
-                                                            'Tomorrow'
+                            todo.data.length === 0?
+                                <div className = 'd-flex justify-content-center my-5'>
+                                    <span className='text-muted' style={{fontStyle: 'italic'}}>you have zero task at the moment...</span>
+                                </div>
+                            :
+                                todo.data.map((value, index) => {
+                                    return(
+                                        <>
+                                            <div key={index} className='mb-2 mt-4'>
+                                                <h5>
+                                                    {
+                                                        value.date === (new Date().toDateString())?
+                                                            'Today'
                                                         :
-                                                            value.date
-                                                }
-                                            </h5>
-                                        </div>
-                                        {
-                                            value.todolists.map((val, ind) => {
-                                                return(
-                                                    <div key={ind} className='d-flex border border-black rounded align-items-center my-2'>
-                                                        <span className={val.status === 0? 'col-8 text-muted' : 'col-8'} style={{fontSize: '16px', textDecoration: val.status === 0? 'line-through' : 'none'}}>
-                                                            {val.title}
-                                                        </span>
-                                                        <div className='col-4 d-flex justify-content-end my-2'>
-                                                            {
-                                                                val.status === 1?
-                                                                    <div className='d-flex align-items-center'>
-                                                                        <span className='mr-3 text-muted'>
-                                                                            {value.time}
-                                                                        </span>
-                                                                        <button onClick={() => onUpdate(val.id)} className='btn' style={{fontSize: 12}}>
-                                                                            <FontAwesomeIcon icon ={faCircleNotch} size='2x' color='#695cff' />
-                                                                        </button>
-                                                                        <button onClick={() => onDelete(val.id)} className='btn' style={{fontSize: 12}}>
-                                                                            <FontAwesomeIcon icon ={faTrashAlt} size='2x'/>
-                                                                        </button>
-                                                                    </div>
-                                                                :
-                                                                    <div className='d-flex align-items-center'>
-                                                                        <button className='btn' style={{fontSize: 12}}>
-                                                                            <FontAwesomeIcon icon ={faCheckCircle} size='2x' color='#695cff' />
-                                                                        </button>
-                                                                        <button onClick={() => onDelete(val.id)} className='btn' style={{fontSize: 12}}>
-                                                                            <FontAwesomeIcon icon ={faTrashAlt} size='2x'/>
-                                                                        </button>
-                                                                    </div>
-                                                            }
+                                                            (value.date).split(' ')[1] === (new Date().toDateString().split(' ')[1]) && Number((value.date).split(' ')[2]) - (Number(new Date().toDateString().split(' ')[2])) === 1?
+                                                                'Tomorrow'
+                                                            :
+                                                                value.date
+                                                    }
+                                                </h5>
+                                            </div>
+                                            {
+                                                value.todolists.map((val, ind) => {
+                                                    return(
+                                                        <div key={ind} className='row border border-black rounded align-items-center my-2 mx-1' style={{overflow: 'hidden'}}>
+                                                            <input type="checkbox" id={ind + `${val.title} ${val.time}`} className='boxcheck col-12' />
                                                             
+                                                            <label className={val.status === 0? 'col-6 text-muted mb-n1' : 'col-6 mb-n1'} for={ind + `${val.title} ${val.time}`} style={{fontSize: '16px', textDecoration: val.status === 0? 'line-through' : 'none', cursor: 'pointer'}}>
+                                                                <FontAwesomeIcon icon= {faChevronDown} size='1x' className='todolist-icon' />{val.title}
+                                                            </label>
+                                                              
+                                                            <div className='col-6 d-flex justify-content-end my-2'>
+                                                                {
+                                                                    val.status === 1?
+                                                                        <div className='d-flex align-items-center'>
+                                                                            <span className='mr-3 text-muted'>
+                                                                                {val.time}
+                                                                            </span>
+                                                                            <button onClick={() => onUpdate(val.id)} className='icon-selected' style={{fontSize: 12, marginRight: '.35rem'}}>
+                                                                                <FontAwesomeIcon icon ={faCircleNotch} size='2x' color='#695cff' />
+                                                                            </button>
+                                                                            <button onClick={() => onDelete(val.id)} className='icon-selected mr-2' style={{fontSize: 12}}>
+                                                                                <FontAwesomeIcon icon ={faTrashAlt} size='2x'/>
+                                                                            </button>
+                                                                        </div>
+                                                                    :
+                                                                        <div className='d-flex align-items-center'>
+                                                                            <button className='btn' style={{fontSize: 12}}>
+                                                                                <FontAwesomeIcon icon ={faCheckCircle} size='2x' color='#695cff' />
+                                                                            </button>
+                                                                            <button onClick={() => onDelete(val.id)} className='icon-selected mr-2' style={{fontSize: 12}}>
+                                                                                <FontAwesomeIcon icon ={faTrashAlt} size='2x'/>
+                                                                            </button>
+                                                                        </div>
+                                                                }
+                                                                
+                                                            </div>
+                                                            
+                                                            <div className="desc col-12" style={{textDecoration: val.status === 0? 'line-through' : 'none'}}>
+                                                                {val.description}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                )
-                                            })
-                                        }
-                                    </>
-                                )
-                            })
+                                                    )
+                                                })
+                                            }
+                                        </>
+                                    )
+                                })
                         } 
                     </div>
                     

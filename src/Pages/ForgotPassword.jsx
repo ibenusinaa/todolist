@@ -7,11 +7,13 @@ const ForgotPasswword = () => {
     const [error, setError] = useState(null)
     const [message, setMessage] = useState(null)
     const [done, setDone] = useState(null)
+    const [loading, setLoading] = useState(null)
     // refs
     const inputEmail = useRef(null)
 
     // functions
     const onSubmitEmail = () =>{
+        setLoading(true)
         let email = inputEmail.current.value
 
         if(validator.isEmail(email)){
@@ -21,6 +23,7 @@ const ForgotPasswword = () => {
                 setError(res.data.error)
                 setMessage(res.data.message)
                 setDone(true)
+                setLoading(false)
                 
             })
             .catch((err) => {
@@ -32,13 +35,13 @@ const ForgotPasswword = () => {
     return(
         <>
             <div className="container">
-                <div className="d-flex justify-content-center">
-                    <div className="card mt-5 shadow-sm" style={{width: '22rem'}}>
+                <div className="d-flex justify-content-center p-5">
+                    <div className="card shadow-sm" style={{width: '22rem'}}>
                         <div className="card-body">
                             <div className='d-flex justify-content-center'>
                             <img src={done? "https://i.ibb.co/rGtNFtB/undraw-Envelope-re-f5j4.png" : "https://i.ibb.co/fkP7gm9/undraw-searching-p5ux.png" } alt="undraw-searching-p5ux" style={{width: 200, height: 150}} />
                             </div>
-                            <h5 className="card-title">Trouble Logging In?</h5>
+                            <h5 className="card-title">{done === true? 'An email has been sent' : 'Trouble Logging In?'}</h5>
                             {
                                 error === false && message?
                                     <p className='text-muted'>{message}</p>
@@ -46,12 +49,10 @@ const ForgotPasswword = () => {
                                     <>
                                         <h6>Enter your email here and we'll send you a link to reset your password</h6>
                                         <h6 className="card-subtitle mb-2 text-muted mt-3">Email</h6>
-                                        <input type='text' ref={inputEmail} className='form form-control' />
+                                        <input type='text' ref={inputEmail} className='form form-control' onKeyPress={(e) => {if(e.key === 'Enter') onSubmitEmail()}} />
                                         <p className='mt-2 text-danger'>{message}</p>
                                         <div className='d-flex mt-4'>
-                                            <button onClick={onSubmitEmail} className='btn btn-info'>
-                                                Reset Password
-                                            </button>
+                                            <input type='button' disabled={loading === true} className='btn btn-info' onClick={onSubmitEmail} value={loading === true? 'Please wait...' : 'Reset Password'} />
                                         </div>
                                     </>
                             }

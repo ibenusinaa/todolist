@@ -15,14 +15,14 @@ const Register = ({onUserSignUp, user}) => {
     const confirmPassword = useRef(null)
 
     // states
-    const [loading, setLoading] = useState(false)
+    // const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [showPass, setShowPass] = useState(true)
     const [showConfirm, setShowConfirm] = useState(true)
 
     // functions
     const onSignUp = () => {
-        setLoading(true)
+        // setLoading(true)
 
         let email = inputEmail.current.value
         let password = inputPassword.current.value
@@ -50,7 +50,7 @@ const Register = ({onUserSignUp, user}) => {
  
     return(
         <>    
-            <div style={{backgroundColor: '#F3EAFF'}}>
+            <div style={{ minHeight: '60vh'}}>
             <div className="container">
                 <div className='d-flex justify-content-center'>
                     <div className="card my-5" style={{width: 450}}>
@@ -108,11 +108,6 @@ const Register = ({onUserSignUp, user}) => {
                                         </p>
                                         <p className='text-center text-success mt-3'>
                                             {user.message}
-                                        </p>
-                                        <hr>
-                                        </hr>
-                                        <p className='text-center mb-n2'>
-                                            Already signed up? Login here
                                         </p>
                                     </div>
                                 </>

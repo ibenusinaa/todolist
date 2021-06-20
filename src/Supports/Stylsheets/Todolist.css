@@ -1,0 +1,30 @@
+.boxcheck {
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+}
+
+.desc {
+    max-height: 0;
+    padding: 0 2.8rem;
+    transition: all .5s;
+    color: #6c757d;
+    font-style: italic;
+    margin-top: -.25rem;
+}
+
+.todolist-icon {
+    margin-right: 1rem;
+    transition: transform .35s;
+}
+
+.boxcheck:checked ~ .desc {
+    max-height: 100%;
+    padding: .8rem 2.5rem 1rem 2.8rem;
+
+}
+
+.boxcheck:checked ~ label .todolist-icon {
+    transform: rotate(180deg)
+
+}

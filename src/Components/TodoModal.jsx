@@ -7,7 +7,11 @@ import {onCreateTodo} from './../Redux/Actions/todoAction'
 const TodoModal = ({user, onCreateTodo, todo}) => {
 
     // states
-    const [modalOpen, setModalOpen] = (useState(false))
+    const [modalOpen, setModalOpen] = useState({
+        modal: false,
+        error: false
+    })
+    
 
     // refs
     const title = useRef(null)
@@ -15,7 +19,7 @@ const TodoModal = ({user, onCreateTodo, todo}) => {
     const date = useRef(null)
 
     const onSubmit = () => {
-
+        if(!title.current.value || !description.current.value || !date.current.value) return setModalOpen({...modalOpen, error: 'I think you missed something...'})
         let token = localStorage.getItem('my-tkn')
         let dataToSend = {
             title: title.current.value,
@@ -25,50 +29,57 @@ const TodoModal = ({user, onCreateTodo, todo}) => {
         }
         console.log(dataToSend)
         onCreateTodo(dataToSend)
-        setModalOpen(false)
+        setModalOpen({modal: false, error: false})
     }
 
     return(
         <>
             <div>
-                <button className='btn' onClick={() => setModalOpen(true)} disabled={user.is_email_confirmed === 0? true : false}>
+                <button className ='button-task' onClick={() => setModalOpen({...modalOpen, modal: true})} disabled={user.is_email_confirmed === 0? true : false}>
                     <span style={{fontSize: 24}}>
                         +
                     </span>
                 </button>
             </div>
-            <Modal toggle={() => setModalOpen(false)} isOpen={modalOpen}>
-            <ModalBody className="px-5 py-5">
-                        <div>
+            <Modal toggle={() => setModalOpen({modal: false, error: false})} isOpen={modalOpen.modal}>
+            <ModalBody className="px-5 my-3">
+                        <div className ='mb-4'>
                             <h3>
                                 New Task
                             </h3>
                         </div>
                         <div className="form-group">
                             <label>Title</label>
-                            <input type="text" ref={title} placeholder="Enter Title" className="form-control" />
+                            <input type="text" ref={title} placeholder="What is your task?" className="form-control" onKeyPress={(e) => {if(e.key === 'Enter') onSubmit()}}/>
                         </div>
                         <div className="form-group">
                             <label>Description</label>
-                            <input type="text" ref={description} placeholder="Enter Description" className="form-control" />
+                            <input type="text" ref={description} placeholder="Put the detail about your task here" className="form-control" onKeyPress={(e) => {if(e.key === 'Enter') onSubmit()}} />
                         </div>
                         <div className="form-group">
                             <label>Date</label>
-                            <input type="datetime-local" ref={date} placeholder="Enter Date" className="form-control" />
+                            <input type="datetime-local" ref={date} placeholder="When you're gonna do the task?" className="form-control" onKeyPress={(e) => {if(e.key === 'Enter') onSubmit()}} />
                         </div>
                         <div>
-                            <input type="button" onClick={onSubmit} value="Submit" className="btn btn-info w-100" />
-                        </div>
-                        <div>
-                            <h6 className="text-danger">
+                            <p className="text-danger mt-3">
                                 {
                                     todo.message?
                                         todo.message
                                     :
                                         null
                                 }
-                            </h6>
+                                {
+                                    modalOpen.error?
+                                        modalOpen.error
+                                    :
+                                        null
+                                }
+                            </p>
                         </div>
+                        <div>
+                            <input type="button" onClick={onSubmit} value="Submit" className="btn button-get-started w-100" style={{fontSize: '1rem'}} />
+                        </div>
+
                     </ModalBody>
             </Modal>
         </>
